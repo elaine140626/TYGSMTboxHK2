@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.bee.mapper.SysConfigMapper">
+  <resultMap id="BaseResultMap" type="org.jeecg.modules.bee.entity.SysConfig">
+    <id column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="savetime1" jdbcType="VARCHAR" property="savetime1" />
+    <result column="savetime2" jdbcType="VARCHAR" property="savetime2" />
+    <result column="savetime3" jdbcType="VARCHAR" property="savetime3" />
+    <result column="feed_weight" jdbcType="INTEGER" property="feedWeight" />
+    <result column="escape_weight" jdbcType="INTEGER" property="escapeWeight" />
+    <result column="heat_lower" jdbcType="DOUBLE" property="heatLower" />
+    <result column="heat_upper" jdbcType="DOUBLE" property="heatUpper" />
+    <result column="king_ctrl_rate" jdbcType="DOUBLE" property="kingCtrlRate" />
+    <result column="draft_interval" jdbcType="INTEGER" property="draftInterval" />
+    <result column="decrese_rate" jdbcType="DOUBLE" property="decreseRate" />
+    <result column="std_weight" jdbcType="INTEGER" property="stdWeight" />
+    <result column="box_low_weight" jdbcType="INTEGER" property="boxLowWeight" />
+    <result column="box_normal_weight" jdbcType="INTEGER" property="boxNormalWeight" />
+    <result column="his_show_days" jdbcType="INTEGER" property="hisShowDays" />
+    <result column="output_ignore_weight" jdbcType="INTEGER" property="outputIgnoreWeight" />
+    <result column="clean_long" jdbcType="INTEGER" property="cleanLong" />
+    <result column="hint_temper" jdbcType="DOUBLE" property="hintTemper" />
+    <result column="hint_weight_frame" jdbcType="DOUBLE" property="hintWeightFrame" />
+    <result column="hint_weight_change" jdbcType="DOUBLE" property="hintWeightChange" />
+    <result column="outputing" jdbcType="INTEGER" property="outputing" />
+    <result column="auto_feed_start_hour" jdbcType="INTEGER" property="autoFeedStartHour" />
+    <result column="auto_feed_end_hour" jdbcType="INTEGER" property="autoFeedEndHour" />
+    <result column="feed_reword_long" jdbcType="INTEGER" property="feedRewordLong" />
+    <result column="feed_supp_long" jdbcType="INTEGER" property="feedSuppLong" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    `uid`, savetime1, savetime2, savetime3, feed_weight, escape_weight, heat_lower, heat_upper, 
+    king_ctrl_rate, draft_interval, decrese_rate, std_weight, box_low_weight, box_normal_weight, 
+    his_show_days, output_ignore_weight, clean_long, hint_temper, hint_weight_frame, 
+    hint_weight_change, outputing, auto_feed_start_hour, auto_feed_end_hour, feed_reword_long, 
+    feed_supp_long
+  </sql>
+  <select id="selectByExample" parameterType="org.jeecg.modules.bee.entity.SysConfigExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ums_sys_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ums_sys_config
+    where `uid` = #{uid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ums_sys_config
+    where `uid` = #{uid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.jeecg.modules.bee.entity.SysConfigExample">
+    delete from ums_sys_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="uid" keyProperty="uid" parameterType="org.jeecg.modules.bee.entity.SysConfig" useGeneratedKeys="true">
+    insert into ums_sys_config (savetime1, savetime2, savetime3, 
+      feed_weight, escape_weight, heat_lower, 
+      heat_upper, king_ctrl_rate, draft_interval, 
+      decrese_rate, std_weight, box_low_weight, 
+      box_normal_weight, his_show_days, output_ignore_weight, 
+      clean_long, hint_temper, hint_weight_frame, 
+      hint_weight_change, outputing, auto_feed_start_hour, 
+      auto_feed_end_hour, feed_reword_long, feed_supp_long
+      )
+    values (#{savetime1,jdbcType=VARCHAR}, #{savetime2,jdbcType=VARCHAR}, #{savetime3,jdbcType=VARCHAR}, 
+      #{feedWeight,jdbcType=INTEGER}, #{escapeWeight,jdbcType=INTEGER}, #{heatLower,jdbcType=DOUBLE}, 
+      #{heatUpper,jdbcType=DOUBLE}, #{kingCtrlRate,jdbcType=DOUBLE}, #{draftInterval,jdbcType=INTEGER}, 
+      #{decreseRate,jdbcType=DOUBLE}, #{stdWeight,jdbcType=INTEGER}, #{boxLowWeight,jdbcType=INTEGER}, 
+      #{boxNormalWeight,jdbcType=INTEGER}, #{hisShowDays,jdbcType=INTEGER}, #{outputIgnoreWeight,jdbcType=INTEGER}, 
+      #{cleanLong,jdbcType=INTEGER}, #{hintTemper,jdbcType=DOUBLE}, #{hintWeightFrame,jdbcType=DOUBLE}, 
+      #{hintWeightChange,jdbcType=DOUBLE}, #{outputing,jdbcType=INTEGER}, #{autoFeedStartHour,jdbcType=INTEGER}, 
+      #{autoFeedEndHour,jdbcType=INTEGER}, #{feedRewordLong,jdbcType=INTEGER}, #{feedSuppLong,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="uid" keyProperty="uid" parameterType="org.jeecg.modules.bee.entity.SysConfig" useGeneratedKeys="true">
+    insert into ums_sys_config
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="savetime1 != null">
+        savetime1,
+      </if>
+      <if test="savetime2 != null">
+        savetime2,
+      </if>
+      <if test="savetime3 != null">
+        savetime3,
+      </if>
+      <if test="feedWeight != null">
+        feed_weight,
+      </if>
+      <if test="escapeWeight != null">
+        escape_weight,
+      </if>
+      <if test="heatLower != null">
+        heat_lower,
+      </if>
+      <if test="heatUpper != null">
+        heat_upper,
+      </if>
+      <if test="kingCtrlRate != null">
+        king_ctrl_rate,
+      </if>
+      <if test="draftInterval != null">
+        draft_interval,
+      </if>
+      <if test="decreseRate != null">
+        decrese_rate,
+      </if>
+      <if test="stdWeight != null">
+        std_weight,
+      </if>
+      <if test="boxLowWeight != null">
+        box_low_weight,
+      </if>
+      <if test="boxNormalWeight != null">
+        box_normal_weight,
+      </if>
+      <if test="hisShowDays != null">
+        his_show_days,
+      </if>
+      <if test="outputIgnoreWeight != null">
+        output_ignore_weight,
+      </if>
+      <if test="cleanLong != null">
+        clean_long,
+      </if>
+      <if test="hintTemper != null">
+        hint_temper,
+      </if>
+      <if test="hintWeightFrame != null">
+        hint_weight_frame,
+      </if>
+      <if test="hintWeightChange != null">
+        hint_weight_change,
+      </if>
+      <if test="outputing != null">
+        outputing,
+      </if>
+      <if test="autoFeedStartHour != null">
+        auto_feed_start_hour,
+      </if>
+      <if test="autoFeedEndHour != null">
+        auto_feed_end_hour,
+      </if>
+      <if test="feedRewordLong != null">
+        feed_reword_long,
+      </if>
+      <if test="feedSuppLong != null">
+        feed_supp_long,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="savetime1 != null">
+        #{savetime1,jdbcType=VARCHAR},
+      </if>
+      <if test="savetime2 != null">
+        #{savetime2,jdbcType=VARCHAR},
+      </if>
+      <if test="savetime3 != null">
+        #{savetime3,jdbcType=VARCHAR},
+      </if>
+      <if test="feedWeight != null">
+        #{feedWeight,jdbcType=INTEGER},
+      </if>
+      <if test="escapeWeight != null">
+        #{escapeWeight,jdbcType=INTEGER},
+      </if>
+      <if test="heatLower != null">
+        #{heatLower,jdbcType=DOUBLE},
+      </if>
+      <if test="heatUpper != null">
+        #{heatUpper,jdbcType=DOUBLE},
+      </if>
+      <if test="kingCtrlRate != null">
+        #{kingCtrlRate,jdbcType=DOUBLE},
+      </if>
+      <if test="draftInterval != null">
+        #{draftInterval,jdbcType=INTEGER},
+      </if>
+      <if test="decreseRate != null">
+        #{decreseRate,jdbcType=DOUBLE},
+      </if>
+      <if test="stdWeight != null">
+        #{stdWeight,jdbcType=INTEGER},
+      </if>
+      <if test="boxLowWeight != null">
+        #{boxLowWeight,jdbcType=INTEGER},
+      </if>
+      <if test="boxNormalWeight != null">
+        #{boxNormalWeight,jdbcType=INTEGER},
+      </if>
+      <if test="hisShowDays != null">
+        #{hisShowDays,jdbcType=INTEGER},
+      </if>
+      <if test="outputIgnoreWeight != null">
+        #{outputIgnoreWeight,jdbcType=INTEGER},
+      </if>
+      <if test="cleanLong != null">
+        #{cleanLong,jdbcType=INTEGER},
+      </if>
+      <if test="hintTemper != null">
+        #{hintTemper,jdbcType=DOUBLE},
+      </if>
+      <if test="hintWeightFrame != null">
+        #{hintWeightFrame,jdbcType=DOUBLE},
+      </if>
+      <if test="hintWeightChange != null">
+        #{hintWeightChange,jdbcType=DOUBLE},
+      </if>
+      <if test="outputing != null">
+        #{outputing,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeedStartHour != null">
+        #{autoFeedStartHour,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeedEndHour != null">
+        #{autoFeedEndHour,jdbcType=INTEGER},
+      </if>
+      <if test="feedRewordLong != null">
+        #{feedRewordLong,jdbcType=INTEGER},
+      </if>
+      <if test="feedSuppLong != null">
+        #{feedSuppLong,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.jeecg.modules.bee.entity.SysConfigExample" resultType="java.lang.Long">
+    select count(*) from ums_sys_config
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ums_sys_config
+    <set>
+      <if test="record.uid != null">
+        `uid` = #{record.uid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.savetime1 != null">
+        savetime1 = #{record.savetime1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.savetime2 != null">
+        savetime2 = #{record.savetime2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.savetime3 != null">
+        savetime3 = #{record.savetime3,jdbcType=VARCHAR},
+      </if>
+      <if test="record.feedWeight != null">
+        feed_weight = #{record.feedWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.escapeWeight != null">
+        escape_weight = #{record.escapeWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.heatLower != null">
+        heat_lower = #{record.heatLower,jdbcType=DOUBLE},
+      </if>
+      <if test="record.heatUpper != null">
+        heat_upper = #{record.heatUpper,jdbcType=DOUBLE},
+      </if>
+      <if test="record.kingCtrlRate != null">
+        king_ctrl_rate = #{record.kingCtrlRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.draftInterval != null">
+        draft_interval = #{record.draftInterval,jdbcType=INTEGER},
+      </if>
+      <if test="record.decreseRate != null">
+        decrese_rate = #{record.decreseRate,jdbcType=DOUBLE},
+      </if>
+      <if test="record.stdWeight != null">
+        std_weight = #{record.stdWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.boxLowWeight != null">
+        box_low_weight = #{record.boxLowWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.boxNormalWeight != null">
+        box_normal_weight = #{record.boxNormalWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.hisShowDays != null">
+        his_show_days = #{record.hisShowDays,jdbcType=INTEGER},
+      </if>
+      <if test="record.outputIgnoreWeight != null">
+        output_ignore_weight = #{record.outputIgnoreWeight,jdbcType=INTEGER},
+      </if>
+      <if test="record.cleanLong != null">
+        clean_long = #{record.cleanLong,jdbcType=INTEGER},
+      </if>
+      <if test="record.hintTemper != null">
+        hint_temper = #{record.hintTemper,jdbcType=DOUBLE},
+      </if>
+      <if test="record.hintWeightFrame != null">
+        hint_weight_frame = #{record.hintWeightFrame,jdbcType=DOUBLE},
+      </if>
+      <if test="record.hintWeightChange != null">
+        hint_weight_change = #{record.hintWeightChange,jdbcType=DOUBLE},
+      </if>
+      <if test="record.outputing != null">
+        outputing = #{record.outputing,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoFeedStartHour != null">
+        auto_feed_start_hour = #{record.autoFeedStartHour,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoFeedEndHour != null">
+        auto_feed_end_hour = #{record.autoFeedEndHour,jdbcType=INTEGER},
+      </if>
+      <if test="record.feedRewordLong != null">
+        feed_reword_long = #{record.feedRewordLong,jdbcType=INTEGER},
+      </if>
+      <if test="record.feedSuppLong != null">
+        feed_supp_long = #{record.feedSuppLong,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ums_sys_config
+    set `uid` = #{record.uid,jdbcType=VARCHAR},
+      savetime1 = #{record.savetime1,jdbcType=VARCHAR},
+      savetime2 = #{record.savetime2,jdbcType=VARCHAR},
+      savetime3 = #{record.savetime3,jdbcType=VARCHAR},
+      feed_weight = #{record.feedWeight,jdbcType=INTEGER},
+      escape_weight = #{record.escapeWeight,jdbcType=INTEGER},
+      heat_lower = #{record.heatLower,jdbcType=DOUBLE},
+      heat_upper = #{record.heatUpper,jdbcType=DOUBLE},
+      king_ctrl_rate = #{record.kingCtrlRate,jdbcType=DOUBLE},
+      draft_interval = #{record.draftInterval,jdbcType=INTEGER},
+      decrese_rate = #{record.decreseRate,jdbcType=DOUBLE},
+      std_weight = #{record.stdWeight,jdbcType=INTEGER},
+      box_low_weight = #{record.boxLowWeight,jdbcType=INTEGER},
+      box_normal_weight = #{record.boxNormalWeight,jdbcType=INTEGER},
+      his_show_days = #{record.hisShowDays,jdbcType=INTEGER},
+      output_ignore_weight = #{record.outputIgnoreWeight,jdbcType=INTEGER},
+      clean_long = #{record.cleanLong,jdbcType=INTEGER},
+      hint_temper = #{record.hintTemper,jdbcType=DOUBLE},
+      hint_weight_frame = #{record.hintWeightFrame,jdbcType=DOUBLE},
+      hint_weight_change = #{record.hintWeightChange,jdbcType=DOUBLE},
+      outputing = #{record.outputing,jdbcType=INTEGER},
+      auto_feed_start_hour = #{record.autoFeedStartHour,jdbcType=INTEGER},
+      auto_feed_end_hour = #{record.autoFeedEndHour,jdbcType=INTEGER},
+      feed_reword_long = #{record.feedRewordLong,jdbcType=INTEGER},
+      feed_supp_long = #{record.feedSuppLong,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.jeecg.modules.bee.entity.SysConfig">
+    update ums_sys_config
+    <set>
+      <if test="savetime1 != null">
+        savetime1 = #{savetime1,jdbcType=VARCHAR},
+      </if>
+      <if test="savetime2 != null">
+        savetime2 = #{savetime2,jdbcType=VARCHAR},
+      </if>
+      <if test="savetime3 != null">
+        savetime3 = #{savetime3,jdbcType=VARCHAR},
+      </if>
+      <if test="feedWeight != null">
+        feed_weight = #{feedWeight,jdbcType=INTEGER},
+      </if>
+      <if test="escapeWeight != null">
+        escape_weight = #{escapeWeight,jdbcType=INTEGER},
+      </if>
+      <if test="heatLower != null">
+        heat_lower = #{heatLower,jdbcType=DOUBLE},
+      </if>
+      <if test="heatUpper != null">
+        heat_upper = #{heatUpper,jdbcType=DOUBLE},
+      </if>
+      <if test="kingCtrlRate != null">
+        king_ctrl_rate = #{kingCtrlRate,jdbcType=DOUBLE},
+      </if>
+      <if test="draftInterval != null">
+        draft_interval = #{draftInterval,jdbcType=INTEGER},
+      </if>
+      <if test="decreseRate != null">
+        decrese_rate = #{decreseRate,jdbcType=DOUBLE},
+      </if>
+      <if test="stdWeight != null">
+        std_weight = #{stdWeight,jdbcType=INTEGER},
+      </if>
+      <if test="boxLowWeight != null">
+        box_low_weight = #{boxLowWeight,jdbcType=INTEGER},
+      </if>
+      <if test="boxNormalWeight != null">
+        box_normal_weight = #{boxNormalWeight,jdbcType=INTEGER},
+      </if>
+      <if test="hisShowDays != null">
+        his_show_days = #{hisShowDays,jdbcType=INTEGER},
+      </if>
+      <if test="outputIgnoreWeight != null">
+        output_ignore_weight = #{outputIgnoreWeight,jdbcType=INTEGER},
+      </if>
+      <if test="cleanLong != null">
+        clean_long = #{cleanLong,jdbcType=INTEGER},
+      </if>
+      <if test="hintTemper != null">
+        hint_temper = #{hintTemper,jdbcType=DOUBLE},
+      </if>
+      <if test="hintWeightFrame != null">
+        hint_weight_frame = #{hintWeightFrame,jdbcType=DOUBLE},
+      </if>
+      <if test="hintWeightChange != null">
+        hint_weight_change = #{hintWeightChange,jdbcType=DOUBLE},
+      </if>
+      <if test="outputing != null">
+        outputing = #{outputing,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeedStartHour != null">
+        auto_feed_start_hour = #{autoFeedStartHour,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeedEndHour != null">
+        auto_feed_end_hour = #{autoFeedEndHour,jdbcType=INTEGER},
+      </if>
+      <if test="feedRewordLong != null">
+        feed_reword_long = #{feedRewordLong,jdbcType=INTEGER},
+      </if>
+      <if test="feedSuppLong != null">
+        feed_supp_long = #{feedSuppLong,jdbcType=INTEGER},
+      </if>
+    </set>
+    where `uid` = #{uid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.jeecg.modules.bee.entity.SysConfig">
+    update ums_sys_config
+    set savetime1 = #{savetime1,jdbcType=VARCHAR},
+      savetime2 = #{savetime2,jdbcType=VARCHAR},
+      savetime3 = #{savetime3,jdbcType=VARCHAR},
+      feed_weight = #{feedWeight,jdbcType=INTEGER},
+      escape_weight = #{escapeWeight,jdbcType=INTEGER},
+      heat_lower = #{heatLower,jdbcType=DOUBLE},
+      heat_upper = #{heatUpper,jdbcType=DOUBLE},
+      king_ctrl_rate = #{kingCtrlRate,jdbcType=DOUBLE},
+      draft_interval = #{draftInterval,jdbcType=INTEGER},
+      decrese_rate = #{decreseRate,jdbcType=DOUBLE},
+      std_weight = #{stdWeight,jdbcType=INTEGER},
+      box_low_weight = #{boxLowWeight,jdbcType=INTEGER},
+      box_normal_weight = #{boxNormalWeight,jdbcType=INTEGER},
+      his_show_days = #{hisShowDays,jdbcType=INTEGER},
+      output_ignore_weight = #{outputIgnoreWeight,jdbcType=INTEGER},
+      clean_long = #{cleanLong,jdbcType=INTEGER},
+      hint_temper = #{hintTemper,jdbcType=DOUBLE},
+      hint_weight_frame = #{hintWeightFrame,jdbcType=DOUBLE},
+      hint_weight_change = #{hintWeightChange,jdbcType=DOUBLE},
+      outputing = #{outputing,jdbcType=INTEGER},
+      auto_feed_start_hour = #{autoFeedStartHour,jdbcType=INTEGER},
+      auto_feed_end_hour = #{autoFeedEndHour,jdbcType=INTEGER},
+      feed_reword_long = #{feedRewordLong,jdbcType=INTEGER},
+      feed_supp_long = #{feedSuppLong,jdbcType=INTEGER}
+    where `uid` = #{uid,jdbcType=VARCHAR}
+  </update>
+</mapper>

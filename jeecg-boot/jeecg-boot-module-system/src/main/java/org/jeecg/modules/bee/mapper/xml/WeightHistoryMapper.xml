@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.bee.mapper.WeightHistoryMapper">
+
+    <resultMap id="WeightChangeMap" type="org.jeecg.modules.bee.model.WeightChangeModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid" />
+        <result column="weight_change_rate" jdbcType="DOUBLE" property="weightChange" />
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime" />
+    </resultMap>
+
+    <resultMap id="WeightFrameMap" type="org.jeecg.modules.bee.model.WeightFrameModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid" />
+        <result column="weight_frame" jdbcType="DOUBLE" property="weightFrame" />
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime" />
+    </resultMap>
+    <!--查询历史重量变化率 时间范围-->
+    <select id="selectWeightChangeByTime" resultMap="WeightChangeMap">
+        select
+            bbid,weight_change_rate,CONCAT(date,' ',time) as recv_time
+        from
+            ums_weight_change
+        where
+            time = #{time} and
+            bbid = #{bbid} and
+            date BETWEEN #{startDate} and #{endDate}
+        order by
+            recv_time
+    </select>
+
+    <!--查询历史重量/框数 时间范围-->
+    <select id="selectWeightFrameByTime" resultMap="WeightFrameMap">
+        select
+            bbid,weight_frame,CONCAT(date,' ',time) as recv_time
+        from
+            ums_weight_frame
+        where
+            time = #{time} and
+            bbid = #{bbid} and
+            date BETWEEN #{startDate} and #{endDate}
+        order by recv_time
+    </select>
+
+
+    <!--插入重量变化率历史表-->
+    <insert id="insertWeightChangeHistory">
+        insert into ums_weight_change(
+            bbid,weight_change_rate,date,time
+        )
+        values
+        <foreach collection="weightChangeModels" item="item" index="index" separator=",">
+            (
+            #{item.bbid,jdbcType=VARCHAR},
+            #{item.weightChange,jdbcType=DOUBLE},
+            #{item.recvTime,jdbcType=DATE},
+            #{item.recvTime,jdbcType=TIME}
+            )
+        </foreach>
+    </insert>
+
+    <!--插入重量/框数历史表-->
+    <insert id="insertWeightFrameHistory">
+        insert into ums_weight_frame(
+            bbid,weight_frame,date,time
+        )
+        values
+        <foreach collection="weightFrameModels" item="item" index="index" separator=",">
+            (
+            #{item.bbid,jdbcType=VARCHAR},
+            #{item.weightFrame,jdbcType=DOUBLE},
+            #{item.recvTime,jdbcType=DATE},
+            #{item.recvTime,jdbcType=TIME}
+            )
+        </foreach>
+    </insert>
+</mapper>

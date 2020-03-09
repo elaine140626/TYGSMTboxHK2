@@ -1,0 +1,107 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "330746",
+      "name": "蜜蜂数据",
+      "font_class": "baichengbaiwangshouyetubiao03",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "806268",
+      "name": "蜜蜂",
+      "font_class": "iconfontxiaomifeng",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "2115096",
+      "name": "蜂王",
+      "font_class": "fengwang",
+      "unicode": "e64e",
+      "unicode_decimal": 58958
+    },
+    {
+      "icon_id": "2250492",
+      "name": "配置",
+      "font_class": "peizhi",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "2939102",
+      "name": "箱",
+      "font_class": "icons-xiang",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "3205372",
+      "name": "产出统计",
+      "font_class": "chanchutongji",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "3993068",
+      "name": "趋势变化",
+      "font_class": "qushibianhua",
+      "unicode": "e763",
+      "unicode_decimal": 59235
+    },
+    {
+      "icon_id": "6132102",
+      "name": "产出比icon",
+      "font_class": "chanchubiicon",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
+    },
+    {
+      "icon_id": "6672956",
+      "name": "体征变化",
+      "font_class": "zhuanhuan",
+      "unicode": "e60a",
+      "unicode_decimal": 58890
+    },
+    {
+      "icon_id": "7190186",
+      "name": "小蜜蜂",
+      "font_class": "xiaomifeng",
+      "unicode": "e765",
+      "unicode_decimal": 59237
+    },
+    {
+      "icon_id": "8361795",
+      "name": "火",
+      "font_class": "huo",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "8438478",
+      "name": "产出样品",
+      "font_class": "chanchuyangpin",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "8540440",
+      "name": "箱",
+      "font_class": "xiang",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "11364063",
+      "name": "重量",
+      "font_class": "zhongliang",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    }
+  ]
+}

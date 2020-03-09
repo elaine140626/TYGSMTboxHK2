@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.bee.mapper.HistoryOutputMapper">
+  <resultMap id="BaseResultMap" type="org.jeecg.modules.bee.entity.HistoryOutput">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="bbid" jdbcType="VARCHAR" property="bbid" />
+    <result column="frame" jdbcType="INTEGER" property="frame" />
+    <result column="honey" jdbcType="DOUBLE" property="honey" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, bbid, frame, honey, `time`
+  </sql>
+
+  <!--自定义-->
+  <!--批量插入-->
+  <insert id="insertMult" >
+    insert into ums_history_output(
+        bbid,frame,honey,time
+    )
+    values
+    <foreach collection="historyOutputs" item="item" index="index" separator=",">
+      (
+        #{item.bbid,jdbcType=VARCHAR},
+        #{item.frame,jdbcType=INTEGER},
+        #{item.honey,jdbcType=DOUBLE},
+        #{item.time,jdbcType=TIMESTAMP}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByTimeRangeUid" resultMap="BaseResultMap">
+    select t1.bbid,sum(t1.honey) as honey,IFNULL(sum(t1.frame),0) as frame
+    FROM	ums_history_output t1
+    inner join ums_user_beebox t2
+        on t1.bbid = t2.bbid
+    where t2.uid=#{uid}
+        AND time BETWEEN CONCAT(#{startDate},' 00:00:00') and CONCAT(#{endDate},' 23:59:59')
+    group BY
+        bbid
+  </select>
+
+  <select id="selectByTimeRangeBbid" resultMap="BaseResultMap">
+    select bbid , IFNULL(frame,0) frame, IFNULL(honey,0) honey, time
+    FROM ums_history_output
+    where bbid = #{bbid}
+	    AND time > SUBDATE(NOW(),INTERVAL 30 DAY)
+  </select>
+
+  <select id="selectByExample" parameterType="org.jeecg.modules.bee.entity.HistoryOutputExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ums_history_output
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ums_history_output
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ums_history_output
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.jeecg.modules.bee.entity.HistoryOutputExample">
+    delete from ums_history_output
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="org.jeecg.modules.bee.entity.HistoryOutput" useGeneratedKeys="true">
+    insert into ums_history_output (bbid, frame, honey, 
+      `time`)
+    values (#{bbid,jdbcType=VARCHAR}, #{frame,jdbcType=INTEGER}, #{honey,jdbcType=DOUBLE}, 
+      #{time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="org.jeecg.modules.bee.entity.HistoryOutput" useGeneratedKeys="true">
+    insert into ums_history_output
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bbid != null">
+        bbid,
+      </if>
+      <if test="frame != null">
+        frame,
+      </if>
+      <if test="honey != null">
+        honey,
+      </if>
+      <if test="time != null">
+        `time`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bbid != null">
+        #{bbid,jdbcType=VARCHAR},
+      </if>
+      <if test="frame != null">
+        #{frame,jdbcType=INTEGER},
+      </if>
+      <if test="honey != null">
+        #{honey,jdbcType=DOUBLE},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.jeecg.modules.bee.entity.HistoryOutputExample" resultType="java.lang.Long">
+    select count(*) from ums_history_output
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ums_history_output
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.bbid != null">
+        bbid = #{record.bbid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frame != null">
+        frame = #{record.frame,jdbcType=INTEGER},
+      </if>
+      <if test="record.honey != null">
+        honey = #{record.honey,jdbcType=DOUBLE},
+      </if>
+      <if test="record.time != null">
+        `time` = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ums_history_output
+    set id = #{record.id,jdbcType=INTEGER},
+      bbid = #{record.bbid,jdbcType=VARCHAR},
+      frame = #{record.frame,jdbcType=INTEGER},
+      honey = #{record.honey,jdbcType=DOUBLE},
+      `time` = #{record.time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.jeecg.modules.bee.entity.HistoryOutput">
+    update ums_history_output
+    <set>
+      <if test="bbid != null">
+        bbid = #{bbid,jdbcType=VARCHAR},
+      </if>
+      <if test="frame != null">
+        frame = #{frame,jdbcType=INTEGER},
+      </if>
+      <if test="honey != null">
+        honey = #{honey,jdbcType=DOUBLE},
+      </if>
+      <if test="time != null">
+        `time` = #{time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.jeecg.modules.bee.entity.HistoryOutput">
+    update ums_history_output
+    set bbid = #{bbid,jdbcType=VARCHAR},
+      frame = #{frame,jdbcType=INTEGER},
+      honey = #{honey,jdbcType=DOUBLE},
+      `time` = #{time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

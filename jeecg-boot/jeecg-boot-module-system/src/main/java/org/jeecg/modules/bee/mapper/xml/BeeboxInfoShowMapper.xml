@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.bee.mapper.BeeboxInfoShowMapper">
+
+    <resultMap id="BaseResultMap" type="org.jeecg.modules.bee.entity.BeeboxInfo">
+        <id column="bbid" jdbcType="VARCHAR" property="bbid" />
+        <id column="recv_time" jdbcType="TIMESTAMP" property="recvTime" />
+        <result column="weight_frame_rate" jdbcType="DOUBLE" property="weightFrameRate" />
+        <result column="weight" jdbcType="DOUBLE" property="weight" />
+        <result column="temper" jdbcType="DOUBLE" property="temper" />
+    </resultMap>
+    
+    <resultMap id="outputResultMap" type="org.jeecg.modules.bee.model.OutputWeightModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="weight_frame_rate" jdbcType="DOUBLE" property="weightFrameRate" />
+        <result column="weight" jdbcType="DOUBLE" property="weight" />
+    </resultMap>
+
+    <!--自动喂食-->
+    <resultMap id="AutoFeedScheduleMap" type="org.jeecg.modules.bee.model.AutoFeedScheduleModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="feed_weight" jdbcType="INTEGER" property="feedWeight"/>
+        <result column="weight_frame_rate" jdbcType="DOUBLE" property="weightFrame"/>
+        <result column="weight" jdbcType="DOUBLE" property="weight"/>
+        <result column="feed_status" jdbcType="INTEGER" property="feedStatus"/>
+        <result column="auto_feed" jdbcType="INTEGER" property="autoFeed"/>
+        <result column="feeding" jdbcType="INTEGER" property="feeding"/>
+        <result column="feed_supp_long" jdbcType="INTEGER" property="feedSuppLong"/>
+        <result column="outputing" jdbcType="INTEGER" property="outputing"/>
+        <result column="oper_his_id" jdbcType="INTEGER" property="operHisId"/>
+    </resultMap>
+
+    <!--自动加热-->
+    <resultMap id="AutoHeatScheduleMap" type="org.jeecg.modules.bee.model.AutoHeatScheduleModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="temper" jdbcType="DOUBLE" property="temper"/>
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+        <result column="heat_status" jdbcType="INTEGER" property="heatStatus"/>
+        <result column="auto_heat" jdbcType="INTEGER" property="autoHeat"/>
+        <result column="heat_lower" jdbcType="DOUBLE" property="heatLower"/>
+        <result column="heat_upper" jdbcType="DOUBLE" property="heatUpper"/>
+        <result column="heating" jdbcType="INTEGER" property="heating"/>
+        <result column="oper_his_id" jdbcType="INTEGER" property="operHisId"/>
+    </resultMap>
+
+    <!--巢门控制 [控王]-->
+    <resultMap id="KingCtrlScheduleMap" type="org.jeecg.modules.bee.model.AutoKingCtrlScheduleModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+        <result column="weight_frame_rate" jdbcType="DOUBLE" property="weightFrame"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="king_ctrl_rate" jdbcType="DOUBLE" property="kingCtrlRate"/>
+        <result column="std_weight" jdbcType="DOUBLE" property="stdWeight"/>
+    </resultMap>
+
+    <!--巢门控制 [通风]-->
+    <resultMap id="DraftGearScheduleMap" type="org.jeecg.modules.bee.model.AutoDraftGearScheduleModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+        <result column="weight_frame_rate" jdbcType="DOUBLE" property="weightFrame"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="decrese_rate" jdbcType="DOUBLE" property="decreseRate"/>
+        <result column="draft_interval" jdbcType="INTEGER" property="draftInterval"/>
+    </resultMap>
+
+    <!--飞逃schedule-->
+    <resultMap id="EscapeScheduleMap" type="org.jeecg.modules.bee.model.EscapeScheduleModel">
+        <result column="bbid" jdbcType="VARCHAR" property="bbid"/>
+        <result column="recv_time" jdbcType="TIMESTAMP" property="recvTime"/>
+        <result column="weight" jdbcType="DOUBLE" property="weight"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="cid" jdbcType="VARCHAR" property="cid"/>
+        <result column="escape_weight" jdbcType="INTEGER" property="escapeWeight"/>
+    </resultMap>
+
+    <!--查询最近20s内蜂箱信息 uid [重量] [温度]-->
+    <select id="selectNowBoxInfoByUid" resultMap="BaseResultMap">
+        SELECT t.*
+        FROM ums_beebox_info t
+        JOIN (
+            SELECT bbid,max(recv_time) last_time
+            FROM ums_beebox_info
+            GROUP BY bbid
+            ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND
+            t.recv_time = t1.last_time
+        LEFT JOIN ums_user_beebox t2
+        on t.bbid = t2.bbid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+              and t2.uid = #{uid}
+        order BY
+        <if test="orderBy == 'weightFrameRate'">
+            weight_frame_rate ASC
+        </if>
+        <if test="orderBy == 'temper'">
+            temper ASC
+        </if>
+    </select>
+    <!--查询240s内最新一条的蜂箱信息 list<String> bbids-->
+    <select id="selectOutputWeightByBbids" parameterType="java.util.List" resultMap="outputResultMap">
+        SELECT t.bbid,t.weight_frame_rate,t.weight
+        FROM ums_beebox_info t
+        JOIN (
+            SELECT bbid,max(recv_time) last_time
+            FROM ums_beebox_info
+            GROUP BY bbid
+            ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND
+            t.recv_time = t1.last_time
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 240 SECOND)
+        order BY t.bbid
+    </select>
+    <!--查询240s内最新一条的蜂箱信息 uid-->
+    <select id="selectOutputWeightByUid" resultMap="outputResultMap">
+        SELECT t.bbid,t.weight_frame_rate,t.weight
+        FROM ums_beebox_info t
+        JOIN (
+            SELECT bbid,max(recv_time) last_time
+            FROM ums_beebox_info
+            GROUP BY bbid
+            ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND
+            t.recv_time = t1.last_time
+        LEFT JOIN ums_user_beebox t2
+            on t.bbid = t2.bbid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 240 SECOND)
+            and t2.uid = #{uid}
+        order BY t.bbid
+    </select>
+    <!--查询最近20s内蜂箱信息 bbid [重量] [温度]  待优化-->
+    <select id="selectNowBoxInfoByBbid" resultMap="BaseResultMap">
+        select t1.*
+        from ums_beebox_info t1
+        join (
+            select bbid,max(recv_time) last_time
+            FROM  ums_beebox_info
+            where bbid = #{bbid}
+        ) t2 on t1.recv_time = t2.last_time and t1.bbid = t2.bbid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+    </select>
+
+    <!--查询最近20s内蜂箱信息 [重量/框数] [重量] [温度]-->
+    <select id="selectNowBoxInfo" resultMap="BaseResultMap">
+        SELECT t.*
+        FROM ums_beebox_info t
+        JOIN (
+            SELECT bbid,max(recv_time) last_time
+            FROM ums_beebox_info
+            GROUP BY bbid
+            ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND t.recv_time = t1.last_time
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+        order BY t.bbid
+    </select>
+
+    <!--查询最近20s内蜂箱信息以及喂食重量 [自动喂食] -->
+    <select id="selectNowWFRAndFeedWeight" parameterType="java.lang.String" resultMap="AutoFeedScheduleMap">
+        SELECT  t.bbid
+                ,t.recv_time
+                ,t.weight_frame_rate
+                ,t.weight
+                ,t2.uid
+                ,t2.auto_feed
+                ,t2.feeding
+                ,t3.feed_weight
+                ,t3.outputing
+                ,t3.feed_supp_long
+                ,IFNULL(t4.feed_status,1) as feed_status
+        FROM ums_beebox_info t
+        JOIN (
+                SELECT bbid,max(recv_time) last_time
+                FROM ums_beebox_info
+                GROUP BY bbid
+                ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND t.recv_time = t1.last_time
+        inner join ums_user_beebox t2
+            on t1.bbid = t2.bbid
+        inner join ums_sys_config t3
+            on t2.uid = t3.uid
+            and (t3.auto_feed_start_hour &lt;= DATE_FORMAT(now(),'%H')  and t3.auto_feed_end_hour >= DATE_FORMAT(now(),'%H') )
+        left join
+        (
+            select bbid,feed_status,feed_type
+            from ums_history_oper
+            where feed_status is not null -- 喂食状态 0成功 1失败 2喂食中
+                and feed_type = 0  -- 是否自动喂食  0自动
+                and feed_time > SUBDATE(NOW(),INTERVAL 1 day)
+            group BY
+                bbid
+            order BY
+                feed_time DESC
+        ) t4
+            on t1.bbid = t4.bbid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+        order BY t.bbid
+    </select>
+
+    <!--查询最近20s内蜂箱温度以及自动加热开关 [自动加热]-->
+    <select id="selectNowTemperInfo" resultMap="AutoHeatScheduleMap">
+        SELECT  t.bbid
+				,t.temper
+				,t.recv_time
+				,t2.uid
+				,t2.auto_heat
+				,t2.heating
+				,t3.heat_lower
+				,t3.heat_upper
+				,IFNULL(t4.heat_status,0) heat_status
+				,t4.id as oper_his_id
+        FROM ums_beebox_info t
+        JOIN (
+            SELECT bbid,max(recv_time) last_time
+            FROM ums_beebox_info
+            GROUP BY bbid
+            ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND t.recv_time = t1.last_time
+        inner join ums_user_beebox t2
+            on t1.bbid = t2.bbid
+        inner join ums_sys_config t3
+            on t2.uid = t3.uid
+        left join
+        (
+            select id,bbid,heat_status
+            from ums_history_oper
+            where heat_status = 2
+            group BY
+                bbid
+            order BY
+                heat_starttime DESC
+        ) t4
+            on t1.bbid = t4.bbid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+        order BY t.bbid
+    </select>
+    <!--查询40s内最近两条重量信息 uid 延迟20s-->
+    <select id="selectBoxInfoIn40sByUid" resultMap="BaseResultMap">
+        SELECT t1.*
+        FROM ums_beebox_info t1 LEFT JOIN ums_user_beebox t2 on t1.bbid = t2.bbid
+        WHERE t2.uid = #{uid} and t1.recv_time > SUBDATE(NOW(), INTERVAL 60-0.0001 SECOND) and t1.recv_time &lt; NOW()
+        ORDER BY t1.bbid , recv_time DESC
+    </select>
+
+    <!--查询40s内最近2条蜂箱信息 All 延迟20s-->
+    <select id="selectAllBoxInfoIn40s" resultMap="BaseResultMap">
+        SELECT *
+        FROM ums_beebox_info
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 60-0.0001 SECOND) and recv_time &lt; NOW()
+        ORDER BY bbid , recv_time DESC
+    </select>
+
+    <!--查询最近2条蜂箱重量 + uid + cid-->
+    <select id="selectAllWeightUidCid" resultMap="EscapeScheduleMap">
+        SELECT t1.bbid,t1.recv_time,t1.weight,t2.uid,t3.cid,t4.escape_weight
+        FROM ums_beebox_info t1
+        inner JOIN ums_user_beebox t2
+            on t1.bbid = t2.bbid
+        left join sys_user t3
+            on t2.uid = t3.id
+        left join ums_sys_config t4
+            on t2.uid = t4.uid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 60-0.0001 SECOND) and recv_time &lt; NOW()
+            and t4.outputing = 0
+        ORDER BY bbid , recv_time DESC
+    </select>
+
+    <!--查询40s内最新一条蜂箱 巢门控制[控王]-->
+    <select id="selectWFRKingCtrlRate" resultMap="KingCtrlScheduleMap">
+        select t.bbid
+			,t.recv_time
+			,t.weight_frame_rate
+			,t2.uid
+			,t3.king_ctrl_rate
+			,t3.std_weight
+        FROM ums_beebox_info t
+        JOIN (
+                SELECT bbid,max(recv_time) last_time
+                FROM ums_beebox_info
+                GROUP BY bbid
+                ORDER BY recv_time DESC
+        ) t1 ON t.bbid = t1.bbid AND t.recv_time = t1.last_time
+        inner join ums_user_beebox t2
+            on t1.bbid = t2.bbid
+        inner join ums_sys_config t3
+            on t2.uid = t3.uid and t3.outputing = 0
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL 40 SECOND)
+        order BY t.bbid
+    </select>
+
+    <!--查询 ns 内重量/框数比 巢门控制 [通风]-->
+    <select id="selectAllWFRDecreseRate" resultMap="DraftGearScheduleMap">
+        SELECT t1.bbid,t1.recv_time,t1.weight_frame_rate,t2.uid,t3.decrese_rate,t3.draft_interval
+        FROM ums_beebox_info t1
+        inner JOIN ums_user_beebox t2
+            on t1.bbid = t2.bbid
+        left join ums_sys_config t3
+            on t2.uid = t3.uid
+        WHERE recv_time > SUBDATE(NOW(), INTERVAL t3.draft_interval + 20-0.0001 SECOND) and recv_time &lt; NOW()
+            and t3.outputing = 0
+        group by t1.bbid,t1.recv_time
+        ORDER BY bbid , recv_time DESC
+    </select>
+
+</mapper>

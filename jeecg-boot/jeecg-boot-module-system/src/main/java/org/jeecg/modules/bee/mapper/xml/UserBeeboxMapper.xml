@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.jeecg.modules.bee.mapper.UserBeeboxMapper">
+  <resultMap id="BaseResultMap" type="org.jeecg.modules.bee.entity.UserBeebox">
+    <id column="bbid" jdbcType="VARCHAR" property="bbid" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="box_status" jdbcType="INTEGER" property="boxStatus" />
+    <result column="king_status" jdbcType="VARCHAR" property="kingStatus" />
+    <result column="frame_num" jdbcType="INTEGER" property="frameNum" />
+    <result column="net_status" jdbcType="INTEGER" property="netStatus" />
+    <result column="door_status" jdbcType="INTEGER" property="doorStatus" />
+    <result column="auto_feed" jdbcType="INTEGER" property="autoFeed" />
+    <result column="auto_heat" jdbcType="INTEGER" property="autoHeat" />
+    <result column="feeding" jdbcType="INTEGER" property="feeding" />
+    <result column="cleaning" jdbcType="INTEGER" property="cleaning" />
+    <result column="heating" jdbcType="INTEGER" property="heating" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    bbid, `uid`, box_status, king_status, frame_num, net_status, door_status, auto_feed, 
+    auto_heat, feeding, cleaning, heating, remark
+  </sql>
+  <select id="selectByExample" parameterType="org.jeecg.modules.bee.entity.UserBeeboxExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ums_user_beebox
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ums_user_beebox
+    where bbid = #{bbid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from ums_user_beebox
+    where bbid = #{bbid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.jeecg.modules.bee.entity.UserBeeboxExample">
+    delete from ums_user_beebox
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.jeecg.modules.bee.entity.UserBeebox">
+    insert into ums_user_beebox (bbid, `uid`, box_status, 
+      king_status, frame_num, net_status, 
+      door_status, auto_feed, auto_heat, 
+      feeding, cleaning, heating, 
+      remark)
+    values (#{bbid,jdbcType=VARCHAR}, #{uid,jdbcType=VARCHAR}, #{boxStatus,jdbcType=INTEGER}, 
+      #{kingStatus,jdbcType=VARCHAR}, #{frameNum,jdbcType=INTEGER}, #{netStatus,jdbcType=INTEGER}, 
+      #{doorStatus,jdbcType=INTEGER}, #{autoFeed,jdbcType=INTEGER}, #{autoHeat,jdbcType=INTEGER}, 
+      #{feeding,jdbcType=INTEGER}, #{cleaning,jdbcType=INTEGER}, #{heating,jdbcType=INTEGER}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.jeecg.modules.bee.entity.UserBeebox">
+    insert into ums_user_beebox
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="bbid != null">
+        bbid,
+      </if>
+      <if test="uid != null">
+        `uid`,
+      </if>
+      <if test="boxStatus != null">
+        box_status,
+      </if>
+      <if test="kingStatus != null">
+        king_status,
+      </if>
+      <if test="frameNum != null">
+        frame_num,
+      </if>
+      <if test="netStatus != null">
+        net_status,
+      </if>
+      <if test="doorStatus != null">
+        door_status,
+      </if>
+      <if test="autoFeed != null">
+        auto_feed,
+      </if>
+      <if test="autoHeat != null">
+        auto_heat,
+      </if>
+      <if test="feeding != null">
+        feeding,
+      </if>
+      <if test="cleaning != null">
+        cleaning,
+      </if>
+      <if test="heating != null">
+        heating,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="bbid != null">
+        #{bbid,jdbcType=VARCHAR},
+      </if>
+      <if test="uid != null">
+        #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="boxStatus != null">
+        #{boxStatus,jdbcType=INTEGER},
+      </if>
+      <if test="kingStatus != null">
+        #{kingStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="frameNum != null">
+        #{frameNum,jdbcType=INTEGER},
+      </if>
+      <if test="netStatus != null">
+        #{netStatus,jdbcType=INTEGER},
+      </if>
+      <if test="doorStatus != null">
+        #{doorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeed != null">
+        #{autoFeed,jdbcType=INTEGER},
+      </if>
+      <if test="autoHeat != null">
+        #{autoHeat,jdbcType=INTEGER},
+      </if>
+      <if test="feeding != null">
+        #{feeding,jdbcType=INTEGER},
+      </if>
+      <if test="cleaning != null">
+        #{cleaning,jdbcType=INTEGER},
+      </if>
+      <if test="heating != null">
+        #{heating,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.jeecg.modules.bee.entity.UserBeeboxExample" resultType="java.lang.Long">
+    select count(*) from ums_user_beebox
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update ums_user_beebox
+    <set>
+      <if test="record.bbid != null">
+        bbid = #{record.bbid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uid != null">
+        `uid` = #{record.uid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.boxStatus != null">
+        box_status = #{record.boxStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.kingStatus != null">
+        king_status = #{record.kingStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.frameNum != null">
+        frame_num = #{record.frameNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.netStatus != null">
+        net_status = #{record.netStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.doorStatus != null">
+        door_status = #{record.doorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoFeed != null">
+        auto_feed = #{record.autoFeed,jdbcType=INTEGER},
+      </if>
+      <if test="record.autoHeat != null">
+        auto_heat = #{record.autoHeat,jdbcType=INTEGER},
+      </if>
+      <if test="record.feeding != null">
+        feeding = #{record.feeding,jdbcType=INTEGER},
+      </if>
+      <if test="record.cleaning != null">
+        cleaning = #{record.cleaning,jdbcType=INTEGER},
+      </if>
+      <if test="record.heating != null">
+        heating = #{record.heating,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null">
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update ums_user_beebox
+    set bbid = #{record.bbid,jdbcType=VARCHAR},
+      `uid` = #{record.uid,jdbcType=VARCHAR},
+      box_status = #{record.boxStatus,jdbcType=INTEGER},
+      king_status = #{record.kingStatus,jdbcType=VARCHAR},
+      frame_num = #{record.frameNum,jdbcType=INTEGER},
+      net_status = #{record.netStatus,jdbcType=INTEGER},
+      door_status = #{record.doorStatus,jdbcType=INTEGER},
+      auto_feed = #{record.autoFeed,jdbcType=INTEGER},
+      auto_heat = #{record.autoHeat,jdbcType=INTEGER},
+      feeding = #{record.feeding,jdbcType=INTEGER},
+      cleaning = #{record.cleaning,jdbcType=INTEGER},
+      heating = #{record.heating,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.jeecg.modules.bee.entity.UserBeebox">
+    update ums_user_beebox
+    <set>
+      <if test="uid != null">
+        `uid` = #{uid,jdbcType=VARCHAR},
+      </if>
+      <if test="boxStatus != null">
+        box_status = #{boxStatus,jdbcType=INTEGER},
+      </if>
+      <if test="kingStatus != null">
+        king_status = #{kingStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="frameNum != null">
+        frame_num = #{frameNum,jdbcType=INTEGER},
+      </if>
+      <if test="netStatus != null">
+        net_status = #{netStatus,jdbcType=INTEGER},
+      </if>
+      <if test="doorStatus != null">
+        door_status = #{doorStatus,jdbcType=INTEGER},
+      </if>
+      <if test="autoFeed != null">
+        auto_feed = #{autoFeed,jdbcType=INTEGER},
+      </if>
+      <if test="autoHeat != null">
+        auto_heat = #{autoHeat,jdbcType=INTEGER},
+      </if>
+      <if test="feeding != null">
+        feeding = #{feeding,jdbcType=INTEGER},
+      </if>
+      <if test="cleaning != null">
+        cleaning = #{cleaning,jdbcType=INTEGER},
+      </if>
+      <if test="heating != null">
+        heating = #{heating,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bbid = #{bbid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.jeecg.modules.bee.entity.UserBeebox">
+    update ums_user_beebox
+    set `uid` = #{uid,jdbcType=VARCHAR},
+      box_status = #{boxStatus,jdbcType=INTEGER},
+      king_status = #{kingStatus,jdbcType=VARCHAR},
+      frame_num = #{frameNum,jdbcType=INTEGER},
+      net_status = #{netStatus,jdbcType=INTEGER},
+      door_status = #{doorStatus,jdbcType=INTEGER},
+      auto_feed = #{autoFeed,jdbcType=INTEGER},
+      auto_heat = #{autoHeat,jdbcType=INTEGER},
+      feeding = #{feeding,jdbcType=INTEGER},
+      cleaning = #{cleaning,jdbcType=INTEGER},
+      heating = #{heating,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where bbid = #{bbid,jdbcType=VARCHAR}
+  </update>
+</mapper>
